@@ -1,17 +1,35 @@
-// const userStore = persistentDataAccess(
-//   `user JOIN 'User' ON user.userId=User.id`
-// );
+require('dotenv').config({ path: './.env' });
+
+const mongoose = require('mongoose');
+const uri = process.env.MONGO_URI;
+const User = require('../models/User');
+
+mongoose.connect(
+  uri,
+  () => {
+    console.log('connected to mongodb');
+  },
+  (err) => {
+    console.log(err);
+  }
+);
 
 const userManager = {
-  postUser: async (user, userContent, channelId) => {
-    const user = {
-      text: userContent,
-      user: user,
-      channelId: channelId,
-      date: new Date(),
-    };
-    await userStore.create(user);
-    return user;
+  postUser: async (userData) => {
+    try {
+      const user = await User.create({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        age: userData.age,
+        email: userData.email,
+        password: userData.password,
+      });
+      console.log(user);
+      return user;
+      mongoose.connection.close();
+    } catch (err) {
+      console.log(err.message);
+    }
   },
   getUser: async (userId) => {
     const user = await userStore.read(userId);
