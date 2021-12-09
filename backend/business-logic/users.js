@@ -1,49 +1,39 @@
-// const messageStore = persistentDataAccess(
-//   `message JOIN 'User' ON Message.userId=User.id`
+// const userStore = persistentDataAccess(
+//   `user JOIN 'User' ON user.userId=User.id`
 // );
 
 const userManager = {
-  createMessage: async (user, messageContent, channelId) => {
-    const message = {
-      text: messageContent,
+  postUser: async (user, userContent, channelId) => {
+    const user = {
+      text: userContent,
       user: user,
       channelId: channelId,
       date: new Date(),
     };
-    await messageStore.create(message);
-    return message;
+    await userStore.create(user);
+    return user;
   },
-  updateMessage: async (message) => {
-    return messageStore.update(message.id, message);
+  getUser: async (userId) => {
+    const user = await userStore.read(userId);
+    if (!user) {
+      throw new Error(`Could not find user with id ${userId}!`);
+    }
+    return user;
   },
-  removeMessage: async (messageId) => {
-    await messageStore.remove(messageId);
+  getAllUsers: async () => {
+    const usersAll = await userStore.all();
+    console.log(`GETALLuserS: ${usersAll}`);
+    if (!usersAll) {
+      throw new Error(`Could not find any users!`);
+    }
+    return usersAll;
+  },
+  putUser: async (user) => {
+    return userStore.update(user.id, user);
+  },
+  deleteUser: async (userId) => {
+    await userStore.remove(userId);
     return true;
-  },
-  getMessage: async (messageId) => {
-    const message = await messageStore.read(messageId);
-    if (!message) {
-      throw new Error(`Could not find message with id ${messageId}!`);
-    }
-    return message;
-  },
-  getAllMessages: async () => {
-    const messagesAll = await messageStore.all();
-    console.log(`GETALLMESSAGES: ${messagesAll}`);
-    if (!messagesAll) {
-      throw new Error(`Could not find any messages!`);
-    }
-    return messagesAll;
-  },
-  getMessagesForChannel: async (channelId) => {
-    const messagesResult = [];
-    const allMessages = await messageStore.all();
-    allMessages.forEach((message) => {
-      if (message.channelId == channelId) {
-        messagesResult.push(message);
-      }
-    });
-    return messagesResult;
   },
 };
 
