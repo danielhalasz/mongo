@@ -8,8 +8,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //routes
-app.use('/', require('./routes/login.js'));
-app.use('/', require('./routes/register.js'));
+app.use('/login', require('./routes/login.js'));
+app.use('/register', require('./routes/register.js'));
 app.use('/users', require('./routes/users.js'));
 app.use('*', (req, res) => {
   res.status(404).json({ message: 'Not Found' });

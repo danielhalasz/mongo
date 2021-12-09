@@ -13,9 +13,10 @@ module.exports = userController = {
   },
   get: async (req, res) => {
     try {
-      const channelId = req.params.channelId;
-      const users = await userManager.getuser(channelId);
-      res.status(200).send(JSON.stringify(users));
+      const userData = req.body;
+      console.log(userData);
+      const result = await userManager.getUser(userData);
+      res.status(200).send(result);
     } catch (error) {
       res.status(500).send(error);
     }

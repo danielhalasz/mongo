@@ -12,17 +12,26 @@ const userManager = {
       });
       console.log(user);
       return user;
-      mongoose.connection.close();
+      // mongoose.connection.close();
     } catch (err) {
       console.log(err.message);
     }
   },
-  getUser: async (userId) => {
-    const user = await userStore.read(userId);
-    if (!user) {
-      throw new Error(`Could not find user with id ${userId}!`);
+  getUser: async (userData) => {
+    try {
+      const user = await User.find({
+        firstName: userData.firstName,
+      });
+      console.log(user);
+      return user;
+      // mongoose.connection.close();
+    } catch (err) {
+      console.log(err.message);
     }
-    return user;
+
+    if (!user) {
+      throw new Error(`Could not find such a user!`);
+    }
   },
   getAllUsers: async () => {
     const usersAll = await userStore.all();
