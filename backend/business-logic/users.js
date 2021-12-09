@@ -21,6 +21,8 @@ const userManager = {
     try {
       const user = await User.find({
         firstName: userData.firstName,
+        lastName: userData.lastName,
+        // volunteer: userData.volunteer,
       });
       console.log(user);
       return user;
